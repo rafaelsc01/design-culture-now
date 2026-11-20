@@ -1,88 +1,89 @@
 /* ===== INICIO menus_evitan_esfera =====
-   Cada panel se posiciona fuera de la esfera (centro 600,324; radio 150),
-   con una separación de 12 px, sin restringir superposición con los títulos.
-   Los botones, sus movimientos y las interacciones originales no se modifican.
-   El posicionamiento se recalcula si cambian las dimensiones de los paneles.
+   Los paneles permanecen debajo de su propio nombre, incluso al flotar.
+   Ajuste horizontal mínimo para no salir de la pantalla ni tocar la esfera.
+   Si falta altura, el contenido puede desplazarse dentro del panel.
    ===== */
-(() => {
-  const W = 1200, H = 788;
-  const points = Array.from(document.querySelectorAll('#scene > .point'));
-  const circle = {x:600,y:324,r:162}; // 150 px esfera + 12 px de separación
-  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
-  const clearOfSphere=(x,y,w,h)=>{
-    const closestX=clamp(circle.x,x,x+w);
-    const closestY=clamp(circle.y,y,y+h);
-    return (closestX-circle.x)**2+(closestY-circle.y)**2 >= circle.r**2;
-  };
+(()=>{
+  'use strict';
+  const stage=document.getElementById('stage');
+  const scene=document.getElementById('scene');
+  const sphere=document.getElementById('sphere');
+  const items=Array.from(scene.querySelectorAll(':scope > .point')).map(point=>({
+    point,label:point.querySelector('.point-label'),panel:point.querySelector('.panel')
+  })).filter(o=>o.label&&o.panel);
+  const clamp=(x,a,b)=>Math.max(a,Math.min(Math.max(a,b),x));
+  const set=(style,prop,val)=>{if(style[prop]!==val)style[prop]=val;};
   function placeMenus(){
-    const scene=document.getElementById('scene');
-    const stage=document.getElementById('stage');
-    const sceneScale=scene.getBoundingClientRect().width/W;
-    if(!sceneScale)return;
+    const stageRect=stage.getBoundingClientRect();
+    const sceneRect=scene.getBoundingClientRect();
+    const sceneScale=sceneRect.width/1200;
     const menuScale=Number(getComputedStyle(scene).getPropertyValue('--menu-scale'))||1;
-    const minX=-scene.offsetLeft/sceneScale+6;
-    const maxX=(stage.clientWidth-scene.offsetLeft)/sceneScale-6;
-    const minY=6, maxY=Math.min(H,stage.clientHeight/sceneScale)-6;
-    const withinScene=(x,y,w,h)=>x>=minX && x+w<=maxX && y>=minY && y+h<=maxY;
-    // Mantener cada panel fuera de los nombres externos al abrirse.
-    // El margen incluye los desplazamientos flotantes de hasta +/-15 px.
-    const labelRects=points.map(p=>{
-      const label=p.querySelector('.point-label');
-      if(!label)return null;
-      const pad=18*menuScale;
-      const x=p.offsetLeft+label.offsetLeft*menuScale;
-      const y=p.offsetTop+(11.8537-label.offsetHeight)/2*menuScale;
-      return {x:x-pad,y:y-pad,w:label.offsetWidth*menuScale+pad*2,h:label.offsetHeight*menuScale+pad*2};
-    }).filter(Boolean);
-    const clearOfLabels=(x,y,w,h)=>labelRects.every(r=>
-      x+w<=r.x || x>=r.x+r.w || y+h<=r.y || y>=r.y+r.h
-    );
-    points.forEach((point,index)=>{
-      const panel=point.querySelector('.panel');
-      if(!panel)return;
-      const w=panel.offsetWidth*menuScale, h=panel.offsetHeight*menuScale;
-      const px=point.offsetLeft, py=point.offsetTop;
-      // Preferencias por ubicación original de cada círculo.
-      // Las posiciones se miden desde la escena, no desde el navegador.
-      const preferred=[
-        [px+22*menuScale,py+12*menuScale],       // 1: derecha y abajo
-        [px-w/2,py+22*menuScale],      // 2: centrado debajo del círculo
-        [px+22*menuScale,py+12*menuScale],       // 3: derecha y abajo, fuera del borde de la esfera
-        [px-w+34*menuScale,py+34*menuScale]     // 4: hacia la izquierda y abajo
-      ][index];
-      const choices=[preferred];
-      const xs=[px+22*menuScale,px-w-22*menuScale,px-w/2,px-w+34*menuScale,minX,maxX-w];
-      const ys=[22,34,50,64,80,105].map(y=>py+y*menuScale).concat([py-h-22*menuScale,minY,maxY-h]);
-      for(const x of xs)for(const y of ys)choices.push([x,y]);
-      // Si cambia el contenido, buscamos una posición válida cercana a la preferida.
-      const possible=choices.filter(([x,y])=>withinScene(x,y,w,h)&&clearOfSphere(x,y,w,h)&&clearOfLabels(x,y,w,h));
-      let best=possible.length?possible.reduce((a,b)=>{
-        const score=p=>(p[0]-preferred[0])**2+(p[1]-preferred[1])**2;
-        return score(b)<score(a)?b:a;
-      }):null;
-      if(!best){
-        // Exploración de toda la escena en pasos de 8px para paneles más grandes.
-        let minCost=Infinity;
-        for(let y=minY;y<=maxY-h;y+=8){
-          for(let x=minX;x<=maxX-w;x+=8){
-            if(!clearOfSphere(x,y,w,h)||!clearOfLabels(x,y,w,h))continue;
-            const cost=(x-preferred[0])**2+(y-preferred[1])**2;
-            if(cost<minCost){minCost=cost;best=[x,y];}
-          }
+    const scale=sceneScale*menuScale;
+    if(!(scale>0))return;
+    const margin=6, gap=8*scale;
+    const left=stageRect.left+margin,right=stageRect.right-margin,bottom=stageRect.bottom-margin;
+    const sr=sphere.getBoundingClientRect();
+    const cx=(sr.left+sr.right)/2,cy=(sr.top+sr.bottom)/2,r=sr.width/2+12*sceneScale;
+    const labels=items.map(o=>o.label.getBoundingClientRect());
+    for(let i=0;i<items.length;i++){
+      const {point,panel}=items[i],label=labels[i],pr=point.getBoundingClientRect();
+      const w=panel.offsetWidth*scale;
+      if(!w)continue;
+      const y=label.bottom+gap;
+      const desired=label.left;
+      const preferredHeight=(panel.scrollHeight+2)*scale;
+      const xs=[desired,label.right-w,left,right-w,cx-r-w,cx+r];
+      const candidates=Array.from(new Set(xs.map(x=>clamp(x,left,right-w)))).map(x=>{
+        let available=Math.max(0,bottom-y);
+        // Never move a panel vertically away from its name.
+        // Limit its height before it would enter the sphere or another label.
+        const nearX=clamp(cx,x,x+w),dx=Math.abs(nearX-cx);
+        if(dx<r){
+          const dy=Math.sqrt(r*r-dx*dx),top=cy-dy,end=cy+dy;
+          if(y<end)available=Math.min(available,Math.max(0,top-y));
         }
-      }
-      if(!best)return;
-      panel.style.right='auto';
-      panel.style.left=((best[0]-px)/menuScale).toFixed(3)+'px';
-      panel.style.top=((best[1]-py)/menuScale).toFixed(3)+'px';
-    });
+        labels.forEach((other,j)=>{
+          if(i===j||other.right+gap<=x||other.left-gap>=x+w||other.bottom+gap<=y)return;
+          available=Math.min(available,Math.max(0,other.top-gap-y));
+        });
+        const overlap=Math.max(0,Math.min(x+w,label.right)-Math.max(x,label.left));
+        const distance=Math.abs(x-desired);
+        return {x,available,overlap,distance};
+      });
+      // Prefer a usable panel directly below its name; only shift sideways
+      // when necessary. A small internal scrollbar is preferable to a distant menu.
+      const minUseful=Math.min(preferredHeight,110*scale);
+      const usable=candidates.filter(c=>c.available>=minUseful);
+      const anchored=usable.filter(c=>c.overlap>0);
+      let pool=anchored.length?anchored:usable.length?usable:candidates;
+      pool.sort((a,b)=>{
+        const aFull=a.available>=preferredHeight,bFull=b.available>=preferredHeight;
+        if(aFull!==bFull)return aFull?-1:1;
+        if(!usable.length)return b.available-a.available||a.distance-b.distance;
+        return a.distance-b.distance||b.available-a.available;
+      });
+      const best=pool[0];
+      if(!best)continue;
+      set(panel.style,'right','auto');
+      set(panel.style,'left',((best.x-pr.left)/scale).toFixed(3)+'px');
+      set(panel.style,'top',((y-pr.top)/scale).toFixed(3)+'px');
+      set(panel.style,'maxHeight',Math.max(0,best.available/scale).toFixed(3)+'px');
+    }
   }
-  placeMenus();
-  if(typeof ResizeObserver!=='undefined'){
-    const ro=new ResizeObserver(placeMenus);
-    points.forEach(p=>ro.observe(p.querySelector('.panel')));
+  // Track the same interpolated movement as the labels only while menus are open.
+  let frame=0;
+  function tick(){
+    frame=0;placeMenus();
+    if(items.some(o=>o.point.classList.contains('open')))frame=requestAnimationFrame(tick);
   }
-  window.addEventListener('resize',placeMenus);
-  document.getElementById('scene').addEventListener('layoutscalechange',placeMenus);
+  function schedule(){
+    if(!frame)frame=requestAnimationFrame(tick);
+  }
+  const observer=new MutationObserver(schedule);
+  items.forEach(o=>observer.observe(o.point,{attributes:true,attributeFilter:['class']}));
+  window.addEventListener('resize',schedule);
+  scene.addEventListener('layoutscalechange',schedule);
+  if(document.fonts)document.fonts.ready.then(schedule);
+  schedule();
 })();
 /* ===== FIN menus_evitan_esfera ===== */
