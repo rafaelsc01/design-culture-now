@@ -30,7 +30,7 @@
     // Patterned back: diagonal lines in DESIGN/NOW, dot matrix in CULTURE.
     function hatch(top,bottom,direction){
       bc.save();bc.beginPath();bc.rect(0,top,TEX_W,bottom-top);bc.clip();
-      bc.strokeStyle='#3973A1';bc.lineWidth=7;
+      bc.strokeStyle='#0d1112';bc.lineWidth=7;
       const height=bottom-top;
       for(let x=-TEX_H*2;x<TEX_W+TEX_H*2;x+=22){
         bc.beginPath();bc.moveTo(x,top);bc.lineTo(x+direction*height,bottom);bc.stroke();
@@ -38,7 +38,7 @@
       bc.restore();
     }
     hatch(0,midA,+1);hatch(midB,TEX_H,-1);
-    bc.fillStyle='#3C74A3';
+    bc.fillStyle='#111415';
     for(let y=midA+7;y<midB;y+=22){
       for(let x=9+((Math.floor(y/22)%2)*11);x<TEX_W;x+=22){
         bc.beginPath();bc.arc(x,y,7.3,0,2*PI);bc.fill();
@@ -110,18 +110,18 @@
         const glassOpacity=.095+fresnel*.22;
         const glassR=234*light,glassG=240*light,glassB=245*light;
         const baseR=249,baseG=251,baseB=252;
-        let r=baseR*(1-ghost)+91*ghost;
-        let g=baseG*(1-ghost)+139*ghost;
-        let b=baseB*(1-ghost)+177*ghost;
+        let r=baseR*(1-ghost)+53*ghost;
+        let g=baseG*(1-ghost)+58*ghost;
+        let b=baseB*(1-ghost)+59*ghost;
         // translucent surface floats in front of the rear lettering.
         r=r*(1-glassOpacity)+glassR*glassOpacity;
         g=g*(1-glassOpacity)+glassG*glassOpacity;
         b=b*(1-glassOpacity)+glassB*glassOpacity;
         const nearRear=isRear(nearLon);
         const frontOpacity=nearTex*(nearRear?.89:.99);
-        const inkR=nearRear?77:44;
-        const inkG=nearRear?128:105;
-        const inkB=nearRear?171:155;
+        const inkR=nearRear?39:18;
+        const inkG=nearRear?40:19;
+        const inkB=nearRear?41:20;
         r=r*(1-frontOpacity)+inkR*frontOpacity;
         g=g*(1-frontOpacity)+inkG*frontOpacity;
         b=b*(1-frontOpacity)+inkB*frontOpacity;
