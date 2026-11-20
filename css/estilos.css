@@ -10,7 +10,7 @@
 .dot:before{content:"";position:absolute;inset:-13px;border-radius:50%}
 .point.open .dot{box-shadow:0 0 0 8px rgba(44,105,155,.08)}
 .dot:focus-visible{outline:2px solid #5687AF;outline-offset:8px}
-.panel{position:absolute;left:20px;top:10px;width:248px;padding:19px 20px;border:1px solid rgba(255,255,255,.28);border-radius:15px;color:#fff;background:var(--panelbg, rgba(44,105,155,.46));-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 14px 34px rgba(44,105,155,.13);visibility:hidden;opacity:0;transform:translateY(7px);pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s}
+.panel{position:absolute;left:20px;top:10px;width:248px;padding:19px 20px;border:1px solid rgba(255,255,255,.28);border-radius:15px;color:#fff;background:var(--panelbg, rgba(44,105,155,.30));-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);box-shadow:0 14px 34px rgba(44,105,155,.13);visibility:hidden;opacity:0;transform:translateY(7px);pointer-events:none;transition:opacity .22s ease,transform .22s ease,visibility .22s}
 .point.open .panel{visibility:visible;opacity:1;transform:translateY(0);pointer-events:auto}
 .point.leftside .panel{left:auto;right:20px}
 .kicker{font-size:10px;font-weight:600;letter-spacing:1.6px;color:#E3EBF2}
