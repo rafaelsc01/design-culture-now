@@ -35,6 +35,16 @@
       });
     }
   }
+  // Guinda: 50 de 142 líneas (35.2 %), distribuidas aleatoriamente.
+  const guindaCounts=[27,23];
+  for(let kind=0;kind<2;kind++){
+    const group=strokes.filter(s=>s.kind===kind);
+    for(let i=0;i<guindaCounts[kind];i++){
+      const j=i+Math.floor(Math.random()*(group.length-i));
+      [group[i],group[j]]=[group[j],group[i]];
+      group[i].guinda=true;
+    }
+  }
   function resize(){
     const dpr=Math.min(window.devicePixelRatio||1,2);
     layer.width=Math.round(W*dpr);
@@ -59,7 +69,9 @@
   function draw(){
     ctx.clearRect(0,0,W,H);
     for(const s of strokes){
-      const shade=s.kind===0?'79,130,172':'87,136,175';
+      const shade=s.guinda
+        ? (s.kind===0?'149,42,69':'154,52,78')
+        : (s.kind===0?'79,130,172':'87,136,175');
       if(!s.kind){
         ctx.strokeStyle=`rgba(${shade},${s.opacity})`;
         ctx.lineWidth=s.thickness;
