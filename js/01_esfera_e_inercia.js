@@ -119,10 +119,12 @@
         b=b*(1-glassOpacity)+glassB*glassOpacity;
         const nearRear=isRear(nearLon);
         const frontOpacity=nearTex*(nearRear?.89:.99);
-        const ink=nearRear?39:18;
-        r=r*(1-frontOpacity)+ink*frontOpacity;
-        g=g*(1-frontOpacity)+(ink+1)*frontOpacity;
-        b=b*(1-frontOpacity)+(ink+2)*frontOpacity;
+        const inkR=nearRear?39:44;
+        const inkG=nearRear?40:105;
+        const inkB=nearRear?41:155;
+        r=r*(1-frontOpacity)+inkR*frontOpacity;
+        g=g*(1-frontOpacity)+inkG*frontOpacity;
+        b=b*(1-frontOpacity)+inkB*frontOpacity;
         // Subtle pearly outline and soft reflection belong to the sphere itself.
         const highlight=Math.pow(Math.max(0,nx*(-.44)+ny*.52+z*.73),22)*.12*(1-frontOpacity);
         const line=Math.pow(1-z,9)*.16;
