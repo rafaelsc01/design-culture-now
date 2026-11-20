@@ -136,5 +136,5 @@
 
 
 /* Menús anclados a sus nombres; conservar dimensiones, cristal y tipografía. */
-.panel{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;min-height:0}
+.panel{overflow:visible;max-height:none;min-height:0}
 .panel strong{color:#952A45}
