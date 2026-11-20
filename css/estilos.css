@@ -1,7 +1,7 @@
 *{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:#ffffff;font-family:Arial,Helvetica,sans-serif}
 #stage{position:relative;width:100%;aspect-ratio:1200/788;overflow:hidden;background:#fff;border:1px solid #E9EFF4}
 #scene{position:absolute;left:0;top:0;width:1200px;height:788px;transform-origin:top left;background:#fff}
-#sphere{position:absolute;left:400px;top:184px;width:400px;height:400px;touch-action:none;cursor:grab;outline:none;display:block}
+#sphere{position:absolute;left:460px;top:214px;width:280px;height:280px;touch-action:none;cursor:grab;outline:none;display:block}
 #sphere.dragging{cursor:grabbing}
 #source-svg{display:none}
 .point{position:absolute;width:11.8537px;height:11.8537px;z-index:2}
