@@ -59,7 +59,7 @@
   function draw(){
     ctx.clearRect(0,0,W,H);
     for(const s of strokes){
-      const shade=s.kind===0?'37,43,49':'47,53,59';
+      const shade=s.kind===0?'79,130,172':'87,136,175';
       if(!s.kind){
         ctx.strokeStyle=`rgba(${shade},${s.opacity})`;
         ctx.lineWidth=s.thickness;
