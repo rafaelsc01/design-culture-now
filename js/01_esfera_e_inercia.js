@@ -76,7 +76,7 @@
     const width=Math.round(cw*dpr),height=Math.round(ch*dpr);
     if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
     ctx.clearRect(0,0,width,height);
-    const visualSize=Math.min(cw,ch)*dpr; // Visible sphere size follows CSS (280x280 px)
+    const visualSize=Math.min(cw,ch)*dpr; // Visible sphere size follows CSS
     const calcSize=720; // Preserve 720x720 internal rendering resolution
     if(sprite.width!==calcSize||sprite.height!==calcSize){sprite.width=calcSize;sprite.height=calcSize;}
     const bitmap=sc.createImageData(calcSize,calcSize),data=bitmap.data;
