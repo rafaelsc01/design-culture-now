@@ -112,7 +112,7 @@
   font-weight:600;
   line-height:1.08;
   letter-spacing:0;
-  color:var(--dot);
+  color:#952A45;
   white-space:nowrap;
   pointer-events:auto;
   cursor:pointer;
@@ -134,3 +134,7 @@
 }
 /* ===== FIN distanciaMenu1 ===== */
 
+
+/* Menús anclados a sus nombres; conservar dimensiones, cristal y tipografía. */
+.panel{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;min-height:0}
+.panel strong{color:#952A45}
