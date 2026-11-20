@@ -1,5 +1,5 @@
 /* ===== INICIO menus_evitan_esfera =====
-   Cada panel se posiciona fuera de la esfera (centro 600,324; radio 140),
+   Cada panel se posiciona fuera de la esfera (centro 600,324; radio 150),
    con una separación de 12 px, sin restringir superposición con los títulos.
    Los botones, sus movimientos y las interacciones originales no se modifican.
    El posicionamiento se recalcula si cambian las dimensiones de los paneles.
@@ -7,7 +7,7 @@
 (() => {
   const W = 1200, H = 788;
   const points = Array.from(document.querySelectorAll('#scene > .point'));
-  const circle = {x:600,y:324,r:152}; // 140 px esfera + 12 px de separación
+  const circle = {x:600,y:324,r:162}; // 150 px esfera + 12 px de separación
   const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
   const clearOfSphere=(x,y,w,h)=>{
     const closestX=clamp(circle.x,x,x+w);
