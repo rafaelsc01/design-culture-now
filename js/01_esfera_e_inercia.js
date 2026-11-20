@@ -145,11 +145,11 @@
           // La tipografía frontal permanece opaca para conservar la nitidez.
           const baseShellAlpha=clamp(.44+fresnel*.34+frontOpacity*.56,.44,1);
           /* ===== INICIO 2ndTry =====
-             Variante de 1stTry: disminuye un 25% la visibilidad del
+             Variante de 1stTry: disminuye un 10% la visibilidad del
              fondo a través de la esfera (sin modificar velocidad_A).
              Volver a 1stTry: establecer SECOND_TRY_VISIBILITY = 1.
           */
-          const SECOND_TRY_VISIBILITY=0.75;
+          const SECOND_TRY_VISIBILITY=0.90;
           const shellAlpha=1-(1-baseShellAlpha)*SECOND_TRY_VISIBILITY;
           /* ===== FIN 2ndTry ===== */
           // El mismo color original sobre fondo blanco, con alpha real:
