@@ -2,10 +2,14 @@
 const stage=document.querySelector('#stage'),scene=document.querySelector('#scene');
 function resize(){
   // Fit the complete design within the available viewport without scrolling.
-  const scale=Math.min(stage.clientWidth/1200,stage.clientHeight/788);
+  const widthScale=stage.clientWidth/1200;
+  const scale=Math.min(widthScale,stage.clientHeight/788);
+  // Restore the original width-based size of points, names and panels independently.
+  scene.style.setProperty('--menu-scale',String(scale>0?widthScale/scale:1));
   scene.style.left=((stage.clientWidth-1200*scale)/2)+'px';
   scene.style.top='0px';
   scene.style.transform='scale('+scale+')';
+  scene.dispatchEvent(new Event('layoutscalechange'));
 }
 resize();if(typeof ResizeObserver!=='undefined'){new ResizeObserver(resize).observe(stage)}else{window.addEventListener('resize',resize)}
 const points=[...scene.querySelectorAll('.point')];const pinned=new Set(),hovered=new Set(),suppressed=new Set(),timers=new Map();
